@@ -10,6 +10,7 @@ namespace Naninovel
     {
         private readonly Transform transform;
         private readonly MeshRenderer meshRenderer;
+        private readonly Material[] materials;
         private readonly MeshFilter meshFilter;
         private readonly RenderCanvas renderCanvas;
         private readonly CommandBuffer commandBuffer = new CommandBuffer();
@@ -21,8 +22,9 @@ namespace Naninovel
         {
             meshRenderer = controller.MeshRenderer;
             meshRenderer.forceRenderingOff = true;
-            meshFilter = controller.MeshFilter;
+            materials = meshRenderer.sharedMaterials;
             renderCanvas = controller.RenderCanvas;
+            meshFilter = controller.MeshFilter;
             transform = controller.transform;
             commandBuffer.name = $"Naninovel-DrawSpine-{transform.name}";
 
@@ -81,7 +83,8 @@ namespace Naninovel
                 .MultiplyPoint3x4(parent.InverseTransformPoint(transform.position)));
             var drawTransform = Matrix4x4.TRS(drawPosition * pixelsPerUnit, parent.localRotation, parent.lossyScale * pixelsPerUnit);
             meshRenderer.GetPropertyBlock(propertyBlock);
-            commandBuffer.DrawMesh(meshFilter.sharedMesh, drawTransform, meshRenderer.sharedMaterial, 0, -1, propertyBlock);
+            for (int i = 0; i < materials.Length; i++)
+                commandBuffer.DrawMesh(meshFilter.sharedMesh, drawTransform, materials[i], i + meshRenderer.subMeshStartIndex, -1, propertyBlock);
         }
     }
 }
