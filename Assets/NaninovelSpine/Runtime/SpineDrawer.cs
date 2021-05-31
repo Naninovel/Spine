@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Naninovel
@@ -10,9 +11,9 @@ namespace Naninovel
     {
         private readonly Transform transform;
         private readonly MeshRenderer meshRenderer;
-        private readonly Material[] materials;
         private readonly MeshFilter meshFilter;
         private readonly RenderCanvas renderCanvas;
+        private readonly List<Material> materials = new List<Material>();
         private readonly CommandBuffer commandBuffer = new CommandBuffer();
         private readonly MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
@@ -22,7 +23,6 @@ namespace Naninovel
         {
             meshRenderer = controller.MeshRenderer;
             meshRenderer.forceRenderingOff = true;
-            materials = meshRenderer.sharedMaterials;
             renderCanvas = controller.RenderCanvas;
             meshFilter = controller.MeshFilter;
             transform = controller.transform;
@@ -83,7 +83,8 @@ namespace Naninovel
                 .MultiplyPoint3x4(parent.InverseTransformPoint(transform.position)));
             var drawTransform = Matrix4x4.TRS(drawPosition * pixelsPerUnit, parent.localRotation, parent.lossyScale * pixelsPerUnit);
             meshRenderer.GetPropertyBlock(propertyBlock);
-            for (int i = 0; i < materials.Length; i++)
+            meshRenderer.GetSharedMaterials(materials);
+            for (int i = 0; i < materials.Count; i++)
                 commandBuffer.DrawMesh(meshFilter.sharedMesh, drawTransform, materials[i], i + meshRenderer.subMeshStartIndex, -1, propertyBlock);
         }
     }
