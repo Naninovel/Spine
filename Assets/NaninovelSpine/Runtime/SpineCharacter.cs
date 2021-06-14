@@ -16,6 +16,10 @@ namespace Naninovel
     [ActorResources(typeof(SpineController), false)]
     public class SpineCharacter : MonoBehaviourActor<CharacterMetadata>, ICharacterActor, LipSync.IReceiver, Blur.IBlurable
     {
+        /// <summary>
+        /// Controller component of the instantiated spine prefab associated with the actor.
+        /// </summary>
+        public virtual SpineController Controller { get; private set; }
         public override string Appearance { get => appearance; set => SetAppearance(value); }
         public override bool Visible { get => visible; set => SetVisibility(value); }
         public CharacterLookDirection LookDirection
@@ -25,7 +29,6 @@ namespace Naninovel
         }
 
         protected virtual TransitionalRenderer TransitionalRenderer { get; private set; }
-        protected virtual SpineController Controller { get; private set; }
         protected virtual SpineDrawer Drawer { get; private set; }
         protected virtual CharacterLipSyncer LipSyncer { get; private set; }
 
