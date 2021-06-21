@@ -45,7 +45,7 @@ namespace Naninovel
 
             prefabLoader = InitializeLoader(ActorMetadata);
             Controller = await InitializeControllerAsync(prefabLoader, Id, Transform);
-            TransitionalRenderer = TransitionalRenderer.CreateFor(ActorMetadata, GameObject);
+            TransitionalRenderer = TransitionalRenderer.CreateFor(ActorMetadata, GameObject, true);
             Drawer = new SpineDrawer(Controller);
             LipSyncer = new CharacterLipSyncer(Id, Controller.ChangeIsSpeaking);
 
